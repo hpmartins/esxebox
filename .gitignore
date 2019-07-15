@@ -9,6 +9,8 @@
 # testing
 /coverage
 
+*.egg-info/
+
 # production
 /build
 
