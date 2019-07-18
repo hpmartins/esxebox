@@ -1,6 +1,0 @@
-README.md
-setup.py
-esxebox.egg-info/PKG-INFO
-esxebox.egg-info/SOURCES.txt
-esxebox.egg-info/dependency_links.txt
-esxebox.egg-info/top_level.txt
