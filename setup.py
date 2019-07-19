@@ -17,7 +17,7 @@ DESCRIPTION = 'Electronic Structure and X-ray Experiment Sandbox'
 URL = 'https://github.com/hpmartins/esxebox'
 EMAIL = 'hpmartins@gmail.com'
 AUTHOR = 'H. P. Martins'
-REQUIRES_PYTHON = '>=3.6.0'
+REQUIRES_PYTHON = '>=3.5.0'
 VERSION = '0.1.0'
 
 # What packages are required for this module to be executed?
