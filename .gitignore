@@ -1,3 +1,13 @@
+
+# Created by https://www.gitignore.io/api/node,flask
+# Edit at https://www.gitignore.io/?templates=node,flask
+
+### Flask ###
+instance/*
+!instance/.gitignore
+.webassets-cache
+
+### Flask.Python Stack ###
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -62,7 +72,6 @@ db.sqlite3-journal
 
 # Flask stuff:
 instance/
-.webassets-cache
 
 # Scrapy stuff:
 .scrapy
@@ -123,9 +132,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+### Node ###
 # Logs
 logs
-*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -188,11 +197,9 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
 .env.test
 
 # parcel-bundler cache (https://parceljs.org/)
-.cache
 
 # next.js build output
 .next
@@ -211,3 +218,5 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+# End of https://www.gitignore.io/api/node,flask
