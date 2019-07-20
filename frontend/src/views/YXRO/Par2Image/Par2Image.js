@@ -1,19 +1,29 @@
 import * as THREE from 'three'
 import React, { Component, useState, useRef, useContext, useEffect, useCallback } from 'react'
-import { apply, Canvas, useRender, useThree } from 'react-three-fiber'
+import { extend, Canvas, useRender, useThree } from 'react-three-fiber'
 import { Col, Container, Row } from 'reactstrap';
 import { randomColor } from 'randomcolor';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-apply({ OrbitControls })
+extend({ OrbitControls })
+
+function Ground() {
+  return (
+    <mesh position={[0, 0, 0]}>
+      <planeBufferGeometry attach="geometry" args={[2000, 2000]} />
+      <meshLambertMaterial
+        attach="material"
+        color="#a0a0a0"
+        depthWrite={false}
+        rotation={[-Math.PI/2, 0, 0]} />
+    </mesh>
+  )
+}
 
 function OneLayer(props) {
-  const [hovered, set] = useState(false)
-  const hover = useCallback(() => set(true), [])
-  const unhover = useCallback(() => set(false), [])
   return (
-    <mesh onPointerOver={hover} onPointerOut={unhover} position={[0, props.normthickness[1], 0]}>
-      <boxGeometry attach="geometry" args={[1, props.normthickness[0], 1]} />
-      <meshLambertMaterial attach="material" color={props.color} opacity={hovered ? 0.3 : 1.0} />
+    <mesh position={[0, 0, props.normthickness[1]]}>
+      <boxGeometry attach="geometry" args={[1.5, 1.5, props.normthickness[0]]} />
+      <meshLambertMaterial attach="material" color={props.color} />
     </mesh>
   )
 }
@@ -70,7 +80,6 @@ function create_normalized_thickness(olist) {
     y = y + obj.thickness/2
     total_thickness += obj.thickness
   }
-  total_thickness /= 2
   for (let key in out) {
     out[key][0] /= total_thickness
     out[key][1] /= total_thickness
@@ -83,7 +92,7 @@ const normthickness = create_normalized_thickness(layerlist)
 function InsideCanvas() {
   const camera = useRef()
   const controls = useRef()
-  const { size, setDefaultCamera } = useThree()
+  const { canvas, size, setDefaultCamera } = useThree()
   useEffect(() => void setDefaultCamera(camera.current), [])
   useRender(() => controls.current.update())
   return (
@@ -91,26 +100,34 @@ function InsideCanvas() {
       <perspectiveCamera
         ref={camera}
         aspect={size.width / size.height}
-        radius={(size.width + size.height) / 4}
-        fov={80}
-        position={[3, 3, 3]}
+        fov={65}
+        position={[4, 4, 4]}
+        up={[0, 0, 1]}
+        far={20}
         onUpdate={self => self.updateProjectionMatrix()}
       />
       {camera.current && (
         <scene>
           <orbitControls
             ref={controls}
-            args={[camera.current]}
+            args={[camera.current, canvas]}
             enableDamping
             enablePan={false}
             dampingFactor={0.1}
-            minDistance={0}
-            maxDistance={20}
+            minDistance={2}
+            maxDistance={8}
             rotateSpeed={0.1}
-          />
-          <ambientLight color="lightblue" />
-          <pointLight intensity={1} position={[0, 0, 3]} />
+            maxPolarAngle={Math.PI/2.2}
+            minPolarAngle={0} />
+          <hemisphereLight color='white' intensity={0.6} position={[0, 0, 3]} />
+          <directionalLight color='#ffffff' intensity={0.6} position={[0.73, 1, 1]} />
           <Layers list={layerlist} normthickness={normthickness} camera={camera.current} />
+          <Ground />
+          <gridHelper
+            position={[0, 0, 0]}
+            args={[40, 40]}
+            receiveShadow={1}
+            rotation={[-Math.PI/2, 0, 0]}/>
         </scene>
       )}
     </>
@@ -122,8 +139,8 @@ class Par2Image extends Component {
     return (
       <Container>
         <Row className="justify-content-md-center">
-          <Col lg={6} style={{height: '70vh'}}>
-            <Canvas style={{ background: '#272727' }}>
+          <Col lg={6} style={{height: '50vh'}}>
+            <Canvas>
               <InsideCanvas />
             </Canvas>
           </Col>
