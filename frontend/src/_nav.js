@@ -18,7 +18,8 @@ export default {
       },
       children: [
         {
-          name: 'Parameter',
+          name: 'Par2Image',
+          url: '/par2image',
           icon: 'icon-pencil',
         },
       ],

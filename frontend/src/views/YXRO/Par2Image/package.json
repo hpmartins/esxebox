@@ -1,0 +1,6 @@
+{
+  "name": "Par2Image",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./Par2Image.js"
+}
