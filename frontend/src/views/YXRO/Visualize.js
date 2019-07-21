@@ -1,7 +1,5 @@
-import * as THREE from 'three'
-import React, { Component, useState, useRef, useContext, useEffect, useCallback } from 'react'
+import React, { Component, useRef, useEffect } from 'react'
 import { extend, Canvas, useRender, useThree } from 'react-three-fiber'
-import { Col, Container, Row } from 'reactstrap';
 import { randomColor } from 'randomcolor';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 extend({ OrbitControls })
@@ -93,7 +91,7 @@ function InsideCanvas() {
   const camera = useRef()
   const controls = useRef()
   const { canvas, size, setDefaultCamera } = useThree()
-  useEffect(() => void setDefaultCamera(camera.current), [])
+  useEffect(() => void setDefaultCamera(camera.current), [setDefaultCamera])
   useRender(() => controls.current.update())
   return (
     <>
@@ -134,20 +132,14 @@ function InsideCanvas() {
   )
 }
 
-class Par2Image extends Component {
+class Visualize extends Component {
   render() {
     return (
-      <Container>
-        <Row className="justify-content-md-center">
-          <Col lg={6} style={{height: '50vh'}}>
-            <Canvas>
-              <InsideCanvas />
-            </Canvas>
-          </Col>
-        </Row>
-      </Container>
+          <Canvas>
+            <InsideCanvas />
+          </Canvas>
     )
   }
 }
 
-export default Par2Image;
+export default Visualize;

@@ -12,39 +12,25 @@ export default {
     {
       name: 'YXRO',
       icon: 'icon-list',
-      badge: {
-        variant: 'info',
-        text: 'NEW',
-      },
-      children: [
-        {
-          name: 'Par2Image',
-          url: '/par2image',
-          icon: 'icon-pencil',
-        },
-      ],
+      url: '/yxro',
     },
     {
-      name: 'Development',
+      title: true,
+      name: 'Development Examples',
+      wrapper: {
+        element: '',
+        attributes: {}
+      },
+      class: 'text-center'
+    },
+    {
+      name: 'Components',
       icon: 'icon-drop',
       children: [
         {
           name: 'Dashboard',
           url: '/dashboard',
           icon: 'icon-speedometer',
-          badge: {
-            variant: 'info',
-            text: 'NEW',
-          },
-        },
-        {
-          title: true,
-          name: 'Theme',
-          wrapper: {            // optional wrapper object
-            element: '',        // required valid HTML5 element tag
-            attributes: {}        // optional valid JS object with JS API naming ex: { className: "my-class", style: { fontFamily: "Verdana" }, id: "my-id"}
-          },
-          class: ''             // optional class names space delimited list for title item ex: "text-center"
         },
         {
           name: 'Colors',
@@ -55,14 +41,6 @@ export default {
           name: 'Typography',
           url: '/theme/typography',
           icon: 'icon-pencil',
-        },
-        {
-          title: true,
-          name: 'Components',
-          wrapper: {
-            element: '',
-            attributes: {},
-          },
         },
         {
           name: 'Base',
@@ -244,17 +222,6 @@ export default {
           name: 'Widgets',
           url: '/widgets',
           icon: 'icon-calculator',
-          badge: {
-            variant: 'info',
-            text: 'NEW',
-          },
-        },
-        {
-          divider: true,
-        },
-        {
-          title: true,
-          name: 'Extras',
         },
         {
           name: 'Pages',

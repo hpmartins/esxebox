@@ -27,6 +27,8 @@ import { Login, Page404, Page500, Register } from './Pages';
 import { Colors, Typography } from './Theme';
 import Widgets from './Widgets';
 
+import YXRO from './YXRO';
+
 export {
   Badges,
   Typography,
@@ -65,5 +67,5 @@ export {
   Cards,
   Breadcrumbs,
   Paginations,
+  YXRO,
 };
-
