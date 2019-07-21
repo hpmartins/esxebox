@@ -1,0 +1,6 @@
+{
+  "name": "BoxLayout",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./BoxLayout.js"
+}
