@@ -1,87 +1,45 @@
-import jwt
-import datetime
+from server import db
+from passlib.hash import pbkdf2_sha256 as sha256
 
-from backend.server import app, db, bcrypt
+class UserModel(db.Model):
+    __tablename__ = 'users'
 
-class User(db.Model):
-    """ User Model for storing user related details """
-    __tablename__ = "users"
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String(120), unique = True, nullable = False)
+    password = db.Column(db.String(120), nullable = False)
+    role     = db.Column(db.String(120), nullable = False)
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    email = db.Column(db.String(255), unique=True, nullable=False)
-    password = db.Column(db.String(255), nullable=False)
-    registered_on = db.Column(db.DateTime, nullable=False)
-    admin = db.Column(db.Boolean, nullable=False, default=False)
+    def save_to_db(self):
+        db.session.add(self)
+        db.session.commit()
 
-    def __init__(self, email, password, admin=False):
-        self.email = email
-        self.password = bcrypt.generate_password_hash(
-            password, app.config.get('BCRYPT_LOG_ROUNDS')
-        ).decode()
-        self.registered_on = datetime.datetime.now()
-        self.admin = admin
+    @classmethod
+    def find_by_username(cls, username):
+        return cls.query.filter_by(username = username).first()
 
-    def encode_auth_token(self, user_id):
-        """
-        Generates the Auth Token
-        :return: string
-        """
-        try:
-            payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
-                'iat': datetime.datetime.utcnow(),
-                'sub': user_id
+    @classmethod
+    def return_all(cls):
+        def to_json(x):
+            return {
+                'username': x.username,
+                'password': x.password,
+                'role'    : x.role,
             }
-            return jwt.encode(
-                payload,
-                app.config.get('SECRET_KEY'),
-                algorithm='HS256'
-            )
-        except Exception as e:
-            return e
+        return {'users': list(map(lambda x: to_json(x), UserModel.query.all()))}
 
-    @staticmethod
-    def decode_auth_token(auth_token):
-        """
-        Validates the auth token
-        :param auth_token:
-        :return: integer|string
-        """
+    @classmethod
+    def delete_all(cls):
         try:
-            payload = jwt.decode(auth_token, app.config.get('SECRET_KEY'))
-            is_blacklisted_token = BlacklistToken.check_blacklist(auth_token)
-            if is_blacklisted_token:
-                return 'Token blacklisted. Please log in again.'
-            else:
-                return payload['sub']
-        except jwt.ExpiredSignatureError:
-            return 'Signature expired. Please log in again.'
-        except jwt.InvalidTokenError:
-            return 'Invalid token. Please log in again.'
-
-
-class BlacklistToken(db.Model):
-    """
-    Token Model for storing JWT tokens
-    """
-    __tablename__ = 'blacklist_tokens'
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    token = db.Column(db.String(500), unique=True, nullable=False)
-    blacklisted_on = db.Column(db.DateTime, nullable=False)
-
-    def __init__(self, token):
-        self.token = token
-        self.blacklisted_on = datetime.datetime.now()
-
-    def __repr__(self):
-        return '<id: token: {}'.format(self.token)
+            num_rows_deleted = db.session.query(cls).delete()
+            db.session.commit()
+            return {'message': '{} row(s) deleted'.format(num_rows_deleted)}
+        except:
+            return {'message': 'Something went wrong'}
 
     @staticmethod
-    def check_blacklist(auth_token):
-        # check whether auth token has been blacklisted
-        res = BlacklistToken.query.filter_by(token=str(auth_token)).first()
-        if res:
-            return True
-        else:
-            return False
+    def generate_hash(password):
+        return sha256.hash(password)
+
+    @staticmethod
+    def verify_hash(password, hash):
+        return sha256.verify(password, hash)

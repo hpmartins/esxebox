@@ -1,9 +1,9 @@
 from flask import Blueprint, request, make_response, jsonify, json
 from flask.views import MethodView
-from backend.server import bcrypt, db
+from server import db
 from pyxro import MultilayerSample
 
-from backend.server import app
+from server import app
 
 # bokeh
 from bokeh.plotting import Figure

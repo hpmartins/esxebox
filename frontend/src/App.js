@@ -1,34 +1,51 @@
 import React, { Component } from 'react';
-import { HashRouter, Route, Switch } from 'react-router-dom';
-// import { renderRoutes } from 'react-router-config';
-import './App.scss';
+import { fetchUtils, Admin, Resource } from 'react-admin';
 
-const loading = () => <div className="animated fadeIn pt-3 text-center">Loading...</div>;
+// Providers
+import simpleRestProvider from 'ra-data-simple-rest';
+import { authProvider } from './_internal';
 
-// Containers
-const BoxLayout = React.lazy(() => import('./containers/BoxLayout'));
+// Layout
+import { Login, Layout } from './_layout';
 
-// Pages
-const Login = React.lazy(() => import('./views/Pages/Login'));
-const Register = React.lazy(() => import('./views/Pages/Register'));
-const Page404 = React.lazy(() => import('./views/Pages/Page404'));
-const Page500 = React.lazy(() => import('./views/Pages/Page500'));
+// Resources
+import { Dashboard, SomePage } from './pages';
+
+// Routes
+import { customRoutes } from './_internal';
+
+const httpClient = (url, options = {}) => {
+    if (!options.headers) {
+        options.headers = new Headers({ Accept: 'application/json' });
+    }
+    const token = localStorage.getItem('token');
+    options.headers.set('Authorization', `Bearer ${token}`);
+    return fetchUtils.fetchJson(url, options);
+}
+const dataProvider = simpleRestProvider('http://localhost:5000', httpClient);
 
 class App extends Component {
 
   render() {
+    if (!dataProvider) {
+        return (
+            <div className="loader-container">
+                <div className="loader">Loading...</div>
+            </div>
+        );
+    }
+
     return (
-      <HashRouter>
-          <React.Suspense fallback={loading()}>
-            <Switch>
-              <Route exact path="/login" name="Login Page" render={props => <Login {...props}/>} />
-              <Route exact path="/register" name="Register Page" render={props => <Register {...props}/>} />
-              <Route exact path="/404" name="Page 404" render={props => <Page404 {...props}/>} />
-              <Route exact path="/500" name="Page 500" render={props => <Page500 {...props}/>} />
-              <Route path="/" name="Home" render={props => <BoxLayout {...props}/>} />
-            </Switch>
-          </React.Suspense>
-      </HashRouter>
+      <Admin
+          appLayout={Layout}
+          dataProvider={dataProvider}
+          authProvider={authProvider}
+          customRoutes={customRoutes}
+          loginPage={Login}
+          dashboard={Dashboard}
+      >
+        <Resource name="asdf" list={SomePage} />
+      </Admin>
     );
   }
 }
