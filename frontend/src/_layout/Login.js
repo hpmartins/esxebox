@@ -96,7 +96,6 @@ class Login extends Component {
                         </Avatar>
                     </div>
                     <form onSubmit={handleSubmit(this.login)}>
-                        <div className={classes.hint}>Hint: demo / demo</div>
                         <div className={classes.form}>
                             <div className={classes.input}>
                                 <Field

@@ -3,16 +3,13 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import compose from 'recompose/compose';
 import SettingsIcon from '@material-ui/icons/Settings';
-import LabelIcon from '@material-ui/icons/Label';
 import { withRouter } from 'react-router-dom';
 import {
-    translate,
     DashboardMenuItem,
     MenuItemLink,
     Responsive,
 } from 'react-admin';
 
-import YXRO from '../YXRO';
 import SubMenu from './SubMenu';
 
 class Menu extends Component {
@@ -30,7 +27,7 @@ class Menu extends Component {
     };
 
     render() {
-        const { onMenuClick, open, logout, translate } = this.props;
+        const { onMenuClick, open, logout } = this.props;
         return (
             <div>
                 {' '}
@@ -39,15 +36,15 @@ class Menu extends Component {
                     handleToggle={() => this.handleToggle('menuYXRO')}
                     isOpen={this.state.menuYXRO}
                     sidebarIsOpen={open}
-                    name="menuYXRO"
+                    name="YXRO"
                     icon={<SettingsIcon />}
                 >
-                    <MenuItemLink
-                                to="/test"
-                                primaryText='Teste A'
-                                leftIcon={<SettingsIcon />}
-                                onClick={onMenuClick}
-                    />
+                  <MenuItemLink
+                              to="/yxro"
+                              primaryText='YXRO'
+                              leftIcon={<SettingsIcon />}
+                              onClick={onMenuClick}
+                  />
                     <MenuItemLink
                                 to="/test"
                                 primaryText='Teste A'
@@ -58,12 +55,6 @@ class Menu extends Component {
                 <MenuItemLink
                             to="/test"
                             primaryText='Teste A'
-                            leftIcon={<SettingsIcon />}
-                            onClick={onMenuClick}
-                />
-                <MenuItemLink
-                            to="/yxro"
-                            primaryText='YXRO'
                             leftIcon={<SettingsIcon />}
                             onClick={onMenuClick}
                 />
@@ -88,7 +79,6 @@ const enhance = compose(
         mapStateToProps,
         {}
     ),
-    translate
 );
 
 export default enhance(Menu);
