@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { fetchUtils, Admin, Resource } from 'react-admin';
+import { Admin, Resource } from 'react-admin';
 
-// Providers
-import simpleRestProvider from 'ra-data-simple-rest';
-import { authProvider } from './_internal';
+// Provider
+import { authProvider, dataProvider } from './_internal';
 
 // Layout
 import { Login, Layout } from './_layout';
@@ -13,16 +12,6 @@ import { Dashboard, SomePage } from './pages';
 
 // Routes
 import { customRoutes } from './_internal';
-
-const httpClient = (url, options = {}) => {
-    if (!options.headers) {
-        options.headers = new Headers({ Accept: 'application/json' });
-    }
-    const token = localStorage.getItem('token');
-    options.headers.set('Authorization', `Bearer ${token}`);
-    return fetchUtils.fetchJson(url, options);
-}
-const dataProvider = simpleRestProvider('http://localhost:5000', httpClient);
 
 class App extends Component {
 
