@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 
 import PropTypes from 'prop-types';
 import { withStyles } from "@material-ui/core/styles";
@@ -41,12 +41,7 @@ const tabs = [
   }
 ]
 
-function MyTab(props) {
-  return <Tab {...props} />;
-}
-
-
-class YXRO extends Component {
+class YXRO extends React.Component {
   state = {
     value: 0
   };
@@ -64,7 +59,7 @@ class YXRO extends Component {
         <AppBar position="static">
           <Tabs value={value} onChange={this.handleChange}>
             {tabs.map(tab => (
-              <MyTab key={tab.id} value={tab.id} label={tab.name} />
+              <Tab key={tab.id} value={tab.id} label={tab.name} />
             ))}
           </Tabs>
         </AppBar>
