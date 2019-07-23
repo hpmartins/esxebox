@@ -1,20 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Admin, Resource } from 'react-admin';
-
-// Provider
-import { authProvider, dataProvider } from './_internal';
-
-// Layout
+import { authProvider, dataProvider, customRoutes } from './_internal';
 import { Login, Layout } from './_layout';
-
-// Resources
 import { Dashboard, SomePage } from './pages';
 
-// Routes
-import { customRoutes } from './_internal';
-
-class App extends Component {
-
+class App extends React.Component {
   render() {
     if (!dataProvider) {
         return (
