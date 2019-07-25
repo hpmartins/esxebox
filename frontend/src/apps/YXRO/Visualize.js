@@ -1,8 +1,27 @@
 import React, { Component, useRef, useEffect } from 'react'
+import { connect } from 'react-redux';
 import { extend, Canvas, useRender, useThree } from 'react-three-fiber'
 import { randomColor } from 'randomcolor';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 extend({ OrbitControls })
+
+function create_normalized_thickness(olist) {
+  let out = {}
+  let total_thickness = 0
+  let y = 0
+  for (let key in olist) {
+    let obj = olist[key]
+    y = y + obj.Thickness/2
+    out[obj.index] = [obj.Thickness, y]
+    y = y + obj.Thickness/2
+    total_thickness += obj.Thickness
+  }
+  for (let key in out) {
+    out[key][0] /= total_thickness
+    out[key][1] /= total_thickness
+  }
+  return out
+}
 
 function Ground() {
   return (
@@ -26,68 +45,26 @@ function OneLayer(props) {
   )
 }
 
-function Layers(props) {
-  const group = useRef()
-  const layers = props.list;
-  const layersList = layers.map((layer) =>
-    <OneLayer
-      key={layer.index.toString()}
-      thickness={layer.thickness}
-      normthickness={props.normthickness[layer.index]}
-      color={randomColor()}/>
-  );
-  return (
-    <group ref={group}>
-      {layersList}
-    </group>
-  )
+class Layers extends React.Component {
+  render() {
+    const layers = this.props.layers;
+    const normthickness = create_normalized_thickness(layers)
+    const layersList = layers.map((layer) =>
+      <OneLayer
+        key={layer.index.toString()}
+        thickness={layer.Thickness}
+        normthickness={normthickness[layer.index]}
+        color={randomColor()}/>
+    );
+    return (
+      <group>
+        {layersList}
+      </group>
+    );
+  }
 }
 
-const layerlist = [
-    {
-        index: 0, name: 'A', thickness: 10,
-    },
-    {
-        index: 1, name: 'B', thickness: 20,
-    },
-    {
-        index: 2, name: 'C', thickness: 10,
-    },
-    {
-        index: 3, name: 'C', thickness: 10,
-    },
-    {
-        index: 4, name: 'C', thickness: 10,
-    },
-    {
-        index: 5, name: 'C', thickness: 10,
-    },
-    {
-        index: 6, name: 'C', thickness: 10,
-    },
-]
-
-function create_normalized_thickness(olist) {
-  let out = {}
-  let total_thickness = 0
-  let y = 0
-  for (let key in olist) {
-    let obj = olist[key]
-    y = y + obj.thickness/2
-    out[obj.index] = [obj.thickness, y]
-    y = y + obj.thickness/2
-    total_thickness += obj.thickness
-  }
-  for (let key in out) {
-    out[key][0] /= total_thickness
-    out[key][1] /= total_thickness
-  }
-  return out
-}
-
-const normthickness = create_normalized_thickness(layerlist)
-
-function InsideCanvas() {
+function InsideCanvas(props) {
   const camera = useRef()
   const controls = useRef()
   const { canvas, size, setDefaultCamera } = useThree()
@@ -119,8 +96,8 @@ function InsideCanvas() {
             minPolarAngle={0} />
           <hemisphereLight color='white' intensity={0.6} position={[0, 0, 3]} />
           <directionalLight color='#ffffff' intensity={0.6} position={[0.73, 1, 1]} />
-          <Layers list={layerlist} normthickness={normthickness} camera={camera.current} />
           <Ground />
+          <Layers layers={props.layers}/>
           <gridHelper
             position={[0, 0, 0]}
             args={[40, 40]}
@@ -135,11 +112,16 @@ function InsideCanvas() {
 class Visualize extends Component {
   render() {
     return (
-          <Canvas>
-            <InsideCanvas />
+          <Canvas updateDefaultCamera>
+            <InsideCanvas layers={this.props.layers}/>
           </Canvas>
     )
   }
 }
 
-export default Visualize;
+const mapStateToProps = state => {
+  return {
+    layers: state.yxro.layers,
+  }
+}
+export default connect(mapStateToProps)(Visualize);

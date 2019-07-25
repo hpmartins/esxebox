@@ -1,12 +1,9 @@
 import React from 'react'
 
-import PropTypes from 'prop-types';
-import { withStyles } from "@material-ui/core/styles";
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import { Dashboard, SomePage } from '../pages';
 import VisualizeTab from './VisualizeTab'
 
 function TabContainer(props) {
@@ -15,13 +12,6 @@ function TabContainer(props) {
     <TabComponent />
   );
 }
-
-const styles = theme => ({
-  root: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.paper
-  }
-});
 
 const tabs = [
   {
@@ -32,30 +22,33 @@ const tabs = [
   {
     id: 1,
     name: 'Dashboard',
-    content: Dashboard,
+    content: VisualizeTab,
   },
   {
     id: 2,
     name: 'Test',
-    content: SomePage,
+    content: VisualizeTab,
   }
 ]
 
 class YXRO extends React.Component {
-  state = {
-    value: 0
-  };
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.state = {
+      value: 0,
+    };
+  }
 
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
+  handleChange(event, val) {
+    this.setState({ value: val });
+  }
 
   render() {
-    const { classes } = this.props;
     const { value } = this.state;
 
     return (
-      <div className={classes.root}>
+      <>
         <AppBar position="static">
           <Tabs value={value} onChange={this.handleChange}>
             {tabs.map(tab => (
@@ -66,13 +59,9 @@ class YXRO extends React.Component {
         {tabs.map(tab => (
           value === tab.id && <TabContainer key={tab.id} {...tab} />
         ))}
-      </div>
+      </>
     );
   }
 }
 
-YXRO.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(YXRO);
+export default YXRO;

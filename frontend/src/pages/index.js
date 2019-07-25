@@ -1,4 +1,7 @@
-import Dashboard from './Dashboard';
-import SomePage from './SomePage';
+import Home from './Home';
+import Test from './Test';
 
-export { Dashboard, SomePage };
+export {
+  Home,
+  Test
+};

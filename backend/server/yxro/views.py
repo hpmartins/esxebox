@@ -1,8 +1,12 @@
 from flask import Blueprint, request, make_response, jsonify, json
 from flask.views import MethodView
 from server import db
-from pyxro import MultilayerSample
+from flask_jwt_extended import (
+    jwt_required, get_jwt_identity, create_access_token,
+)
 
+
+from pyxro import MultilayerSample
 from server import app
 
 # bokeh
@@ -15,24 +19,29 @@ from bokeh.sampledata.autompg import autompg
 
 yxro_blueprint = Blueprint('yxro', __name__)
 
+
+def protected():
+    # Access the identity of the current user with get_jwt_identity
+    current_user = get_jwt_identity()
+    return jsonify(logged_in_as=current_user), 200
+
 class Par2JsonAPI(MethodView):
     def post(self):
+        current_user = get_jwt_identity()
         post_data = request.get_json()
 
         sample = MultilayerSample()
-        if sample.from_par(post_data):
-            response = app.response_class(
-                        response = sample.to_json(),
-                        status = 200,
-                        mimetype = 'application/json',
-            )
-            return response
+        if sample.from_par(post_data['parfile']):
+            response = {
+                        'parfile' : sample.to_json(),
+            }
+            return make_response(jsonify(response), 200)
         else:
             response = {
                         'status' : 'fail',
                         'message': 'Error converting par file to new format',
             }
-            return make_response(jsonify(response)), 401
+            return make_response(jsonify(response), 401)
 
 par2json_view = Par2JsonAPI.as_view('par2json_api')
 

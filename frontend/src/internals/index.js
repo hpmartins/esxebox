@@ -1,6 +1,11 @@
 import authProvider from './authProvider';
 import dataProvider from './dataProvider';
-import customRoutes from './customRoutes';
 import registerServiceWorker from './registerServiceWorker';
+import store, { history } from './store';
 
-export { authProvider, dataProvider, customRoutes, registerServiceWorker };
+export {
+  registerServiceWorker,
+  authProvider,
+  dataProvider,
+  store, history
+};
