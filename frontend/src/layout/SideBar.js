@@ -63,11 +63,11 @@ function SideBar(props) {
       </div>
       <Divider />
       <List>
-        {routes.map((route, index) => (
+        {(routes && routes.map((route, index) => (
           route.divider ? (<Divider />) :
           route.header ?  (<ListSubheader inset>{route.name}</ListSubheader>) :
           route.path ? (<SideBarItem key={index} route={route} />) : ('')
-        ))}
+        )))}
       </List>
     </Drawer>
   );

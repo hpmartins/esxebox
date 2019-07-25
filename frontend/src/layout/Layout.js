@@ -48,9 +48,9 @@ export default function Layout(props) {
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Switch>
-            {routes.map((route) => (
+            {(routes && routes.map((route) => (
                 route.path ? (<Route key={route.path} exact={route.exact} path={route.path} component={route.component} />) : ('')
-            ))}
+            )))}
           </Switch>
         </Container>
       </main>

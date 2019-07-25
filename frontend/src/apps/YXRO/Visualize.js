@@ -49,13 +49,13 @@ class Layers extends React.Component {
   render() {
     const layers = this.props.layers;
     const normthickness = create_normalized_thickness(layers)
-    const layersList = layers.map((layer) =>
+    const layersList = (layers && layers.map((layer) =>
       <OneLayer
         key={layer.index.toString()}
         thickness={layer.Thickness}
         normthickness={normthickness[layer.index]}
         color={randomColor()}/>
-    );
+    ));
     return (
       <group>
         {layersList}
