@@ -109,7 +109,7 @@ function InsideCanvas(props) {
   )
 }
 
-class Visualize extends Component {
+class SampleCanvas extends Component {
   render() {
     return (
           <Canvas updateDefaultCamera>
@@ -124,4 +124,4 @@ const mapStateToProps = state => {
     layers: state.yxro.layers,
   }
 }
-export default connect(mapStateToProps)(Visualize);
+export default connect(mapStateToProps)(SampleCanvas);

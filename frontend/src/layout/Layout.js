@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
       alignItems: 'center',
   },
   button: {
-    margin: theme.spacing(1),
+    color: 'white',
   },
 }));
 
@@ -35,7 +35,7 @@ function SideBarItem(props) {
       className={classes.link}
       exact={route.exact}
       activeStyle={{fontWeight: 'bold'}}>
-        <Button key={route.name} variant="outlined" color="secondary" className={classes.button}>{route.name}</Button>
+        <Button key={route.name} className={classes.button}>{route.name}</Button>
     </NavLink>
   );
 }

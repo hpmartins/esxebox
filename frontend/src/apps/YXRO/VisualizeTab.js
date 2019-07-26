@@ -1,15 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Paper from '@material-ui/core/Paper';
 import { getLayersSaga, setLayers } from './actions';
 
+import {DataTable, Column} from 'primereact/datatable';
+
 import download from './download2';
 
-import Visualize from './Visualize';
+import SampleCanvas from './SampleCanvas';
+
+import Button from './Button';
+
+const useStyles = makeStyles(theme => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+}));
 
 class LoadParFileInput extends React.Component {
   constructor(props) {
@@ -102,41 +112,52 @@ function SaveJsonFile(props) {
 }
 
 
-class VisualizeTab extends React.Component {
-  render() {
-    const layers = this.props.layers;
+function VisualizeTab(props) {
+  const layers = props.layers;
+  const classes = useStyles();
 
-    return (
-      <div>
-          <Grid container spacing={3} direction="row" alignItems="stretch">
-            <Grid item xs={3}>
-              <Box p={0} borderRight={1}>
-                <div style={{ height: "75vh" }}><Visualize/></div>
-              </Box>
-            </Grid>
-            <Grid item xs={9}>
-              <Box pt={5}>
-                <Grid container spacing={2} direction="column" alignItems="center">
-                  <Grid item>
-                    <ButtonGroup color="primary" aria-label="outlined primary button group">
-                      <LoadParFileButton />
-                      <LoadJsonFileButton />
-                      <SaveJsonFile layers={layers} />
-                    </ButtonGroup>
+  return (
+    <div>
+        <Grid container spacing={0} direction="row" alignItems="stretch">
+          <Grid item xs={3}>
+            <Box p={0} borderRight={1} borderColor="grey.600">
+              <div style={{ height: "75vh" }}><SampleCanvas /></div>
+            </Box>
+          </Grid>
+          <Grid item xs={9}>
+            <Box border={0} margin={1}>
+              <Grid container direction="column" spacing={2}>
+                <Grid item>
+                  <Grid container spacing={6} direction="row" alignItems="stretch" justify="space-evenly">
+                    <Grid item>
+                        <LoadParFileButton />
+                    </Grid>
+                    <Grid item>
+                        <LoadJsonFileButton />
+                    </Grid>
+                    <Grid item>
+                        <SaveJsonFile layers={layers} />
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Box>
+                <Grid item align="center">
+                  <DataTable value={layers} reorderableColumns={true} onRowReorder={(e) => props.setLayers(e.value)}>
+                      <Column rowReorder={true} style={{width: '5em'}}/>
+                      <Column field="Name" header="Name" />
+                      <Column field="Thickness" header="Thickness" />
+                  </DataTable>
+                </Grid>
             </Grid>
+          </Box>
           </Grid>
-      </div>
-    );
-  }
+        </Grid>
+    </div>
+  );
 }
 
-const mapStateToProps = state => {
+export default connect(state => {
   return {
     layers: state.yxro.layers,
   }
-}
-
-export default connect(mapStateToProps)(VisualizeTab);
+},
+dispatch => ({setLayers: layers => dispatch(setLayers(layers))}))(VisualizeTab);
