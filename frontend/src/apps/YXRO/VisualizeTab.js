@@ -1,17 +1,21 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Box from '@material-ui/core/Box';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Paper from '@material-ui/core/Paper';
-import { getLayersSaga } from './actions';
+import { getLayersSaga, setLayers } from './actions';
+
+import download from './download2';
 
 import Visualize from './Visualize';
 
-class FileInput extends React.Component {
+class LoadParFileInput extends React.Component {
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
   }
-
   handleChange(event) {
     if (event.target.files && event.target.files[0]) {
       let file = event.target.files[0];
@@ -22,43 +26,112 @@ class FileInput extends React.Component {
       reader.readAsText(file);
     }
   }
-
   render() {
     return (
-        <form>
-            <input type="file" onChange={this.handleChange} />
-        </form>
+      <>
+        <input
+          id="raised-button-file"
+          type="file"
+          accept="par"
+          style={{display: 'none'}}
+          onChange={this.handleChange}
+        />
+      <label htmlFor="raised-button-file">
+        <Button raised component="span" color="primary" variant="outlined">
+          Load .par file
+        </Button>
+      </label>
+    </>
     );
   }
 }
-
-const mapDispatchToProps = dispatch => ({
-  onUploadParfile: parfile => dispatch(getLayersSaga(parfile)),
-})
-
-const OtherTest = connect(
+const LoadParFileButton = connect(
   null,
-  mapDispatchToProps
-)(FileInput);
+  dispatch => ({onUploadParfile: parfile => dispatch(getLayersSaga(parfile))})
+)(LoadParFileInput);
+
+
+class LoadJsonFileInput extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+  }
+  handleChange(event) {
+    if (event.target.files && event.target.files[0]) {
+      let file = event.target.files[0];
+      let reader = new FileReader();
+      reader.onloadend = (e) => {
+        this.props.onUploadJsonFile(JSON.parse(e.target.result));
+      }
+      reader.readAsText(file);
+    }
+  }
+  render() {
+    return (
+      <>
+        <input
+          id="raised-button-json"
+          type="file"
+          accept="json"
+          style={{display: 'none'}}
+          onChange={this.handleChange}
+        />
+      <label htmlFor="raised-button-json">
+        <Button raised component="span" color="primary" variant="outlined">
+          Load .json file
+        </Button>
+      </label>
+    </>
+    );
+  }
+}
+const LoadJsonFileButton = connect(
+  null,
+  dispatch => ({onUploadJsonFile: layers => dispatch(setLayers(layers))})
+)(LoadJsonFileInput);
+
+function SaveJsonFile(props) {
+  const layers = props.layers;
+  return (
+    <>
+    <Button raised component="span" color="primary" variant="outlined" onClick={() => {download(JSON.stringify(layers, null, 4), 'params.json', 'application/json')}}>
+      Save .json file
+    </Button>
+    </>
+  );
+}
 
 
 class VisualizeTab extends React.Component {
   render() {
-    const layers = JSON.stringify(this.props.layers);
+    const layers = this.props.layers;
 
     return (
       <div>
-        <Grid container spacing={2}>
-          <Grid item xs={3}>
-            <Paper>
-              <div style={{ height: "75vh" }}><Visualize/></div>
-            </Paper>
+        <Box>
+          <Grid container spacing={3}>
+            <Grid item xs={3}>
+              <Box p={0}>
+                <div style={{ height: "75vh" }}><Visualize/></div>
+              </Box>
+            </Grid>
+            <Grid item xs={9}>
+              <Box pt={5}>
+                <Grid container spacing={3}>
+                  <Grid container spacing={1} direction="column" alignItems="center">
+                    <Grid item>
+                      <ButtonGroup color="primary" aria-label="outlined primary button group">
+                        <LoadParFileButton />
+                        <LoadJsonFileButton />
+                        <SaveJsonFile layers={layers} />
+                      </ButtonGroup>
+                    </Grid>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Grid>
           </Grid>
-          <Grid item xs={9}>
-            <OtherTest />
-            {layers}
-          </Grid>
-        </Grid>
+        </Box>
       </div>
     );
   }
