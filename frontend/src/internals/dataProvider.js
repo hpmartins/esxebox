@@ -6,10 +6,8 @@ function httpProvider(baseurl) {
       const options = {headers: new Headers({ Accept: 'application/json' })};
       const token = localStorage.getItem('token');
       options.headers.set('Authorization', `Bearer ${token}`);
-      return fetchJson.post(url, params, options);
+      return fetchJson.post(url, params);
   };
 };
 
-const dataProvider = httpProvider('http://localhost:5000');
-
-export default dataProvider;
+export default httpProvider(process.env.REACT_APP_API_URL);
