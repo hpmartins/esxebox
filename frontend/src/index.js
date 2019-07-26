@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { registerServiceWorker } from './internals';
 import App from './App';
@@ -8,9 +8,9 @@ import { store, history } from './internals'
 
 ReactDOM.render(
   <Provider store={store}>
-    <BrowserRouter history={history}>
+    <Router history={history}>
       <App />
-    </BrowserRouter>
+    </Router>
   </Provider>,
 document.querySelector('#root'));
 

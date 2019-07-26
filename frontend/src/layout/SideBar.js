@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function SideBarItem(props) {
-  const { key, route } = props;
+  const { route } = props;
   const classes = useStyles();
 
   return (
@@ -40,7 +40,7 @@ function SideBarItem(props) {
       className={classes.link}
       exact={route.exact}
       activeStyle={{fontWeight: 'bold'}}>
-      <ListItem button key={key}>
+      <ListItem button key={route.name}>
         {route.icon ? (<ListItemIcon>{route.icon}</ListItemIcon>) : ('')}
           {route.name}
       </ListItem>
@@ -64,9 +64,9 @@ function SideBar(props) {
       <Divider />
       <List>
         {(routes && routes.map((route, index) => (
-          route.divider ? (<Divider />) :
-          route.header ?  (<ListSubheader inset>{route.name}</ListSubheader>) :
-          route.path ? (<SideBarItem key={index} route={route} />) : ('')
+          route.divider ? (<Divider key={index}/>) :
+          route.header ?  (<ListSubheader key={index} inset>{route.name}</ListSubheader>) :
+          route.path ? (<SideBarItem key={route.name} route={route} />) : ('')
         )))}
       </List>
     </Drawer>
