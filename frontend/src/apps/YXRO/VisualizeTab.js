@@ -37,7 +37,7 @@ class LoadParFileInput extends React.Component {
           onChange={this.handleChange}
         />
       <label htmlFor="raised-button-file">
-        <Button raised component="span" color="primary" variant="outlined">
+        <Button component="span" color="primary" variant="outlined">
           Load .par file
         </Button>
       </label>
@@ -77,7 +77,7 @@ class LoadJsonFileInput extends React.Component {
           onChange={this.handleChange}
         />
       <label htmlFor="raised-button-json">
-        <Button raised component="span" color="primary" variant="outlined">
+        <Button component="span" color="primary" variant="outlined">
           Load .json file
         </Button>
       </label>
@@ -94,7 +94,7 @@ function SaveJsonFile(props) {
   const layers = props.layers;
   return (
     <>
-    <Button raised component="span" color="primary" variant="outlined" onClick={() => {download(JSON.stringify(layers, null, 4), 'params.json', 'application/json')}}>
+    <Button component="span" color="primary" variant="outlined" onClick={() => {download(JSON.stringify(layers, null, 4), 'params.json', 'application/json')}}>
       Save .json file
     </Button>
     </>
@@ -108,30 +108,26 @@ class VisualizeTab extends React.Component {
 
     return (
       <div>
-        <Box>
-          <Grid container spacing={3}>
+          <Grid container spacing={3} direction="row" alignItems="stretch">
             <Grid item xs={3}>
-              <Box p={0}>
+              <Box p={0} borderRight={1}>
                 <div style={{ height: "75vh" }}><Visualize/></div>
               </Box>
             </Grid>
             <Grid item xs={9}>
               <Box pt={5}>
-                <Grid container spacing={3}>
-                  <Grid container spacing={1} direction="column" alignItems="center">
-                    <Grid item>
-                      <ButtonGroup color="primary" aria-label="outlined primary button group">
-                        <LoadParFileButton />
-                        <LoadJsonFileButton />
-                        <SaveJsonFile layers={layers} />
-                      </ButtonGroup>
-                    </Grid>
+                <Grid container spacing={2} direction="column" alignItems="center">
+                  <Grid item>
+                    <ButtonGroup color="primary" aria-label="outlined primary button group">
+                      <LoadParFileButton />
+                      <LoadJsonFileButton />
+                      <SaveJsonFile layers={layers} />
+                    </ButtonGroup>
                   </Grid>
                 </Grid>
               </Box>
             </Grid>
           </Grid>
-        </Box>
       </div>
     );
   }
