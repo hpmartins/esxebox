@@ -47,7 +47,7 @@ function OneLayer(props) {
 
 class Layers extends React.Component {
   render() {
-    const layers = this.props.layers;
+    const layers = this.props.layers.reverse();
     const normthickness = create_normalized_thickness(layers)
     const layersList = (layers && layers.map((layer) =>
       <OneLayer
