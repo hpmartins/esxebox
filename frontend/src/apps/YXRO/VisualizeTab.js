@@ -109,25 +109,23 @@ function SaveJsonFile(props) {
 function VisualizeTab(props) {
   const layers = props.layers;
 
-  const reorderLayers = (e) => {
-    props.setLayers(e.value.map((layer, idx) => {
-      layer.index = idx;
-      return layer;
-    }));
-  }
-
   const columns = [
     {
       key: "index",
-      name: "ID"
+      name: "ID",
+      width: 50,
     },
     {
       key: "Name",
-      name: "Name"
+      name: "Name",
+      width: 150,
+      editable: true,
     },
     {
       key: "Thickness",
-      name: "Thickness"
+      name: "Thickness",
+      width: 80,
+      editable: true,
     }
   ];
 
@@ -147,16 +145,25 @@ function VisualizeTab(props) {
                     <Grid item>
                         <LoadParFileButton />
                     </Grid>
+                    { false &&
                     <Grid item>
                         <LoadJsonFileButton />
-                    </Grid>
+                    </Grid> }
+                    { false &&
                     <Grid item>
                         <SaveJsonFile layers={layers} />
-                    </Grid>
+                    </Grid> }
                   </Grid>
                 </Grid>
                 <Grid item align="center">
-                  {(layers && layers.length > 0) && (<TableTest data={props.layers} rowKey="index" columns={columns} onReOrder={e => props.setLayers(e)} />)}
+                  {(layers && layers.length > 0) && (
+                    <TableTest
+                      data={props.layers}
+                      rowKey="index"
+                      columns={columns}
+                      onRowsReorder={a => props.setLayers(a)}
+                      onRowsUpdated={a => props.setLayers(a)} />
+                  )}
                 </Grid>
             </Grid>
           </Box>

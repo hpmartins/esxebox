@@ -57,7 +57,7 @@ class TableTest extends React.Component {
     });
     let args = [e.rowTarget.idx, 0].concat(draggedRows);
     Array.prototype.splice.apply(undraggedRows, args);
-    this.props.onReOrder(undraggedRows)
+    this.props.onRowsReorder(undraggedRows)
   };
 
   onRowsSelected = rows => {
@@ -75,6 +75,15 @@ class TableTest extends React.Component {
     });
   };
 
+  onGridRowsUpdated = ({ fromRow, toRow, updated }) => {
+    const newdata = this.props.data.slice();
+    for (let i = fromRow; i <= toRow; i++) {
+      newdata[i] = { ...newdata[i], ...updated };
+    }
+    console.log(newdata);
+    this.props.onRowsUpdated(newdata);
+  };
+
   render() {
     return (
       <DraggableContainer>
@@ -82,10 +91,12 @@ class TableTest extends React.Component {
           enableCellSelection={true}
           rowActionsCell={RowActionsCell}
           columns={this._columns}
-          rowGetter={(i) => {return this.props.data[i]}}
+          rowGetter={i => this.props.data[i]}
           rowsCount={this.props.data.length}
           minHeight={650}
           rowRenderer={<RowRenderer onRowDrop={this.reorderRows} />}
+          onGridRowsUpdated={this.onGridRowsUpdated}
+          enableCellSelect={true}
           rowSelection={{
             showCheckbox: true,
             enableShiftSelect: true,
