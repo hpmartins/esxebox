@@ -11,6 +11,7 @@ import {Column} from 'primereact/column';
 import download from './download2';
 
 import SampleCanvas from './SampleCanvas';
+import TableTest from './TableTest';
 
 import Button from './Button';
 
@@ -108,11 +109,33 @@ function SaveJsonFile(props) {
 function VisualizeTab(props) {
   const layers = props.layers;
 
+  const reorderLayers = (e) => {
+    props.setLayers(e.value.map((layer, idx) => {
+      layer.index = idx;
+      return layer;
+    }));
+  }
+
+  const columns = [
+    {
+      key: "index",
+      name: "ID"
+    },
+    {
+      key: "Name",
+      name: "Name"
+    },
+    {
+      key: "Thickness",
+      name: "Thickness"
+    }
+  ];
+
   return (
     <div>
         <Grid container spacing={0} direction="row" alignItems="stretch">
           <Grid item xs={3}>
-            <Box p={0} borderRight={1} borderColor="grey.600">
+            <Box p={0}>
               <div style={{ height: "75vh" }}><SampleCanvas /></div>
             </Box>
           </Grid>
@@ -133,13 +156,7 @@ function VisualizeTab(props) {
                   </Grid>
                 </Grid>
                 <Grid item align="center">
-                  {(layers && layers.length > 0) && (
-                  <DataTable value={layers} reorderableColumns={true} onRowReorder={(e) => props.setLayers(e.value)}>
-                      <Column rowReorder={true} style={{width: '3em'}} />
-                      <Column field="Name" header="Name" />
-                      <Column field="Thickness" header="Thickness" />
-                  </DataTable>
-                  )}
+                  {(layers && layers.length > 0) && (<TableTest data={props.layers} rowKey="index" columns={columns} onReOrder={e => props.setLayers(e)} />)}
                 </Grid>
             </Grid>
           </Box>

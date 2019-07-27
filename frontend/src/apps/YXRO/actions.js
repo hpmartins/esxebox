@@ -20,7 +20,6 @@ export async function getLayers(data) {
   return await dataProvider('yxro/par2json', {parfile: data.parfile})
     .then(response => {
       const alldata = JSON.parse(response.parfile);
-      console.log(alldata);
       return alldata.Layers;
     });
 }
