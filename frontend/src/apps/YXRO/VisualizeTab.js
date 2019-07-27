@@ -3,23 +3,16 @@ import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import Paper from '@material-ui/core/Paper';
 import { getLayersSaga, setLayers } from './actions';
 
-import {DataTable, Column} from 'primereact/datatable';
+import {DataTable} from 'primereact/datatable';
+import {Column} from 'primereact/column';
 
 import download from './download2';
 
 import SampleCanvas from './SampleCanvas';
 
 import Button from './Button';
-
-const useStyles = makeStyles(theme => ({
-  button: {
-    margin: theme.spacing(1),
-  },
-}));
 
 class LoadParFileInput extends React.Component {
   constructor(props) {
@@ -114,7 +107,6 @@ function SaveJsonFile(props) {
 
 function VisualizeTab(props) {
   const layers = props.layers;
-  const classes = useStyles();
 
   return (
     <div>
@@ -141,11 +133,13 @@ function VisualizeTab(props) {
                   </Grid>
                 </Grid>
                 <Grid item align="center">
+                  {(layers && layers.length > 0) && (
                   <DataTable value={layers} reorderableColumns={true} onRowReorder={(e) => props.setLayers(e.value)}>
-                      <Column rowReorder={true} style={{width: '5em'}}/>
+                      <Column rowReorder={true} style={{width: '3em'}} />
                       <Column field="Name" header="Name" />
                       <Column field="Thickness" header="Thickness" />
                   </DataTable>
+                  )}
                 </Grid>
             </Grid>
           </Box>
