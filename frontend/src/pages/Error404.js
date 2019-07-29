@@ -1,10 +1,10 @@
 import React from 'react';
 
-export default class Test extends React.Component {
+export default class Error404 extends React.Component {
   render() {
     return (
       <>
-        Test
+        Error 404
       </>
     );
   }

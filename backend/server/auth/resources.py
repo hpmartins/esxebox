@@ -15,7 +15,7 @@ class UserRegistration(Resource):
 
         if UserModel.find_by_username(data['username']):
             resp = jsonify({'register': False, 'msg': 'User {} already exists'.format(data['username'])})
-            return make_response(resp, 409)
+            return make_response(resp, 200)
 
         new_user = UserModel(
             username = data['username'],
@@ -26,10 +26,10 @@ class UserRegistration(Resource):
         try:
             new_user.save_to_db()
             access_token = create_access_token(identity = new_user)
-            resp = jsonify({'register': True, 'message': 'User {} was created'.format(data['username']), 'access_token': access_token})
+            resp = jsonify({'register': True, 'message': 'User {} was created'.format(data['username']), 'token': access_token})
             return make_response(resp, 201)
         except:
-            resp = jsonify({'register': False, 'msg':'Something went wrong'})
+            resp = jsonify({'register': False, 'message': 'Something went wrong'})
             return make_response(resp, 500)
 
 
@@ -40,15 +40,15 @@ class UserLogin(Resource):
 
         if not current_user:
             resp = jsonify({'login': False, 'message': 'User {} doesn\'t exist'.format(data['username'])})
-            return make_response(resp, 401)
+            return make_response(resp, 200)
 
         if UserModel.verify_hash(data['password'], current_user.password):
             access_token = create_access_token(identity = current_user)
-            resp = jsonify({'login': True, 'access_token': access_token})
+            resp = jsonify({'login': True, 'message': 'Login successful', 'token': access_token})
             return make_response(resp, 200)
         else:
             resp = jsonify({'login': False, 'message': 'Wrong username/password'})
-            return make_response(resp, 401)
+            return make_response(resp, 200)
 
 class AllUsers(Resource):
     @jwt_required

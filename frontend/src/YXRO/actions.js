@@ -1,4 +1,4 @@
-import { dataProvider } from '../../internals';
+import dataProvider from '../internal/dataProvider';
 
 export const SET_LAYERS = 'SET_LAYERS';
 export function setLayers(layers) {

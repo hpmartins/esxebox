@@ -121,7 +121,7 @@ class SampleCanvas extends Component {
 
 const mapStateToProps = state => {
   return {
-    layers: state.yxro.layers,
+    layers: state.root.yxro.layers,
   }
 }
 export default connect(mapStateToProps)(SampleCanvas);

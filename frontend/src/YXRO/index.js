@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+
 import { layersReducer } from './_reducers'
 import { watchGetLayersSaga } from './_sagas'
 

@@ -1,12 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import { getLayersSaga, setLayers } from './actions';
-
-import {DataTable} from 'primereact/datatable';
-import {Column} from 'primereact/column';
 
 import download from './download2';
 
@@ -28,6 +24,7 @@ class LoadParFileInput extends React.Component {
         this.props.onUploadParfile(e.target.result);
       }
       reader.readAsText(file);
+      event.target.value = null;
     }
   }
   render() {
@@ -68,6 +65,7 @@ class LoadJsonFileInput extends React.Component {
         this.props.onUploadJsonFile(JSON.parse(e.target.result));
       }
       reader.readAsText(file);
+      event.target.value = null;
     }
   }
   render() {
@@ -94,6 +92,7 @@ const LoadJsonFileButton = connect(
   dispatch => ({onUploadJsonFile: layers => dispatch(setLayers(layers))})
 )(LoadJsonFileInput);
 
+
 function SaveJsonFile(props) {
   const layers = props.layers;
   return (
@@ -104,7 +103,6 @@ function SaveJsonFile(props) {
     </>
   );
 }
-
 
 function VisualizeTab(props) {
   const layers = props.layers;
@@ -124,6 +122,12 @@ function VisualizeTab(props) {
     {
       key: "Thickness",
       name: "Thickness",
+      width: 80,
+      editable: true,
+    },
+    {
+      key: "Density",
+      name: "Density",
       width: 80,
       editable: true,
     }
@@ -161,8 +165,8 @@ function VisualizeTab(props) {
                       data={props.layers}
                       rowKey="index"
                       columns={columns}
-                      onRowsReorder={a => props.setLayers(a)}
-                      onRowsUpdated={a => props.setLayers(a)} />
+                      onRowsUpdated={a => props.setLayers(a)}
+                    />
                   )}
                 </Grid>
             </Grid>
@@ -175,7 +179,7 @@ function VisualizeTab(props) {
 
 export default connect(state => {
   return {
-    layers: state.yxro.layers,
+    layers: state.root.yxro.layers,
   }
 },
 dispatch => ({setLayers: layers => dispatch(setLayers(layers))}))(VisualizeTab);

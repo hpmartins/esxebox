@@ -2,9 +2,9 @@ import {
   SET_LAYERS,
 } from '../actions'
 
-import initialState from './initialState';
+import layersInitialState from './layersInitialState';
 
-export default function setLayersInfo(state = initialState.Layers, action) {
+export default function layersReducer(state = layersInitialState.Layers, action) {
   switch (action.type) {
     case SET_LAYERS:
       return action.layers.map((layer, idx) => {
