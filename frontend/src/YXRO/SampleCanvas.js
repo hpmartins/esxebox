@@ -1,27 +1,9 @@
 import React, { Component, useRef, useEffect } from 'react'
 import { connect } from 'react-redux';
-import { extend, Canvas, useRender, useThree } from 'react-three-fiber'
+import { extend, Canvas, useRender, useThree, useUpdate } from 'react-three-fiber'
 import { randomColor } from 'randomcolor';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 extend({ OrbitControls })
-
-function create_normalized_thickness(olist) {
-  let out = {}
-  let total_thickness = 0
-  let y = 0
-  for (let key in olist) {
-    let obj = olist[key]
-    y = y + obj.Thickness/2
-    out[obj.index] = [obj.Thickness, y]
-    y = y + obj.Thickness/2
-    total_thickness += obj.Thickness
-  }
-  for (let key in out) {
-    out[key][0] /= total_thickness
-    out[key][1] /= total_thickness
-  }
-  return out
-}
 
 function Ground() {
   return (
@@ -38,30 +20,25 @@ function Ground() {
 
 function OneLayer(props) {
   return (
-    <mesh position={[0, 0, props.normthickness[1]]}>
-      <boxGeometry attach="geometry" args={[1.5, 1.5, props.normthickness[0]]} />
+    <mesh position={[0, 0, props.thickness[1]]}>
+      <boxGeometry attach="geometry" args={[1.5, 1.5, props.thickness[0]]} />
       <meshLambertMaterial attach="material" color={props.color} />
     </mesh>
   )
 }
 
-class Layers extends React.Component {
-  render() {
-    const layers = this.props.layers.slice().reverse();
-    const normthickness = create_normalized_thickness(layers)
-    const layersList = (layers && layers.map((layer) =>
-      <OneLayer
-        key={layer.index.toString()}
-        thickness={layer.Thickness}
-        normthickness={normthickness[layer.index]}
-        color={randomColor()}/>
-    ));
-    return (
-      <group>
-        {layersList}
-      </group>
-    );
-  }
+function Layers(props) {
+  const layers = props.layers.slice().reverse();
+  return (
+    <group>
+      {(layers && layers.map((layer, idx) =>
+        <OneLayer
+              key={layer.index}
+              thickness={layer.NormalizedThickness}
+              color={layer.Color || randomColor()}/>
+      ))}
+    </group>
+  );
 }
 
 function InsideCanvas(props) {
@@ -69,14 +46,14 @@ function InsideCanvas(props) {
   const controls = useRef()
   const { canvas, size, setDefaultCamera } = useThree()
   useEffect(() => void setDefaultCamera(camera.current), [setDefaultCamera])
-  useRender(() => controls.current.update())
+  useRender(() => {controls.current.update()})
+  // useRender(() => {console.log(camera.current.position)})
   return (
     <>
       <perspectiveCamera
         ref={camera}
-        aspect={size.width / size.height}
         fov={65}
-        position={[4, 4, 4]}
+        position={[4, 4, 3]}
         up={[0, 0, 1]}
         far={20}
         onUpdate={self => self.updateProjectionMatrix()}
@@ -92,7 +69,7 @@ function InsideCanvas(props) {
             minDistance={2}
             maxDistance={8}
             rotateSpeed={0.1}
-            maxPolarAngle={Math.PI/2.2}
+            maxPolarAngle={Math.PI/2.1}
             minPolarAngle={0} />
           <hemisphereLight color='white' intensity={0.6} position={[0, 0, 3]} />
           <directionalLight color='#ffffff' intensity={0.6} position={[0.73, 1, 1]} />
@@ -109,14 +86,12 @@ function InsideCanvas(props) {
   )
 }
 
-class SampleCanvas extends Component {
-  render() {
+function SampleCanvas(props) {
     return (
-          <Canvas updateDefaultCamera>
-            <InsideCanvas layers={this.props.layers}/>
+          <Canvas updateDefaultCamera={true}>
+            <InsideCanvas layers={props.layers}/>
           </Canvas>
-    )
-  }
+    );
 }
 
 const mapStateToProps = state => {

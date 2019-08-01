@@ -14,6 +14,7 @@ import Typography from '@material-ui/core/Typography';
 
 import Home from './Home';
 import Login from './Login';
+import Logout from './Logout';
 import Error404 from './Error404';
 import YXRO from '../YXRO';
 
@@ -75,13 +76,14 @@ const LoginLogoutButton = connect(state => {
            exact
            to="/wrongpath"
            className={classes.link}>
-           <Button className={classes.button}>{props.auth.userName}</Button>
+           <Button className={classes.button}>{props.auth.username}</Button>
        </NavLink>
-       <Button
-            className={classes.button}
-            onClick={() => logoutAndRedirect()}>
-            Logout
-       </Button>
+       <NavLink
+           exact
+           to="/logout"
+           className={classes.link}>
+           <Button className={classes.button}>Logout</Button>
+       </NavLink>
        </>
      )
     : <NavLink
@@ -136,7 +138,8 @@ function AppContent(props) {
         <Switch>
           <Route path="/home" exact component={Home} />
           <Redirect exact from="/" to="/home" />
-          <Route path="/login" component={Login} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/logout" component={Logout} />
           <PrivateRoute path='/yxro' component={YXRO} />
           <Route component={Error404} />
         </Switch>

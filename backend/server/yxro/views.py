@@ -5,7 +5,6 @@ from flask_jwt_extended import (
     jwt_required, get_jwt_identity, create_access_token,
 )
 
-
 from pyxro import MultilayerSample
 from server import app
 
@@ -26,6 +25,7 @@ def protected():
     return jsonify(logged_in_as=current_user), 200
 
 class Par2JsonAPI(MethodView):
+    @jwt_required
     def post(self):
         current_user = get_jwt_identity()
         post_data = request.get_json()

@@ -1,4 +1,7 @@
-export default {
+import { create_normalized_thickness } from './layersReducer';
+import { randomColor } from 'randomcolor';
+
+const layersInitialState = {
     "Layers": [
         {
             "index": 0,
@@ -271,3 +274,15 @@ export default {
         "Polarization": 1
     }
 }
+
+const normalized_thickness = create_normalized_thickness(layersInitialState.Layers);
+layersInitialState.Layers = layersInitialState.Layers.map((layer, idx) => {
+  layer.NormalizedThickness = normalized_thickness[idx];
+  layer.Thickness = parseFloat(layer.Thickness);
+  if (!layer.Color) {
+    layer.Color = randomColor();
+  }
+  return layer;
+});
+
+export default layersInitialState;

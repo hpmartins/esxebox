@@ -30,20 +30,12 @@ export default function layersReducer(state = layersInitialState.Layers, action)
   switch (action.type) {
     case SET_LAYERS:
       const normalized_thickness = create_normalized_thickness(action.layers);
-      const unique_colors = [...new Set(action.layers.map(layer => layer.Color))];
-      const colors = {};
-      if (unique_colors.length === 1 && !unique_colors[0]) {
-        const unique_layers = [...new Set(action.layers.map(layer => layer.Name))];
-        unique_layers.forEach((obj, idx, array) => {
-          colors[obj] = randomColor();
-        })
-      }
       return action.layers.map((layer, idx) => {
         layer.NormalizedThickness = normalized_thickness[layer.index];
         layer.index = idx;
         layer.Thickness = parseFloat(layer.Thickness);
         if (!layer.Color) {
-          layer.Color = colors[layer.Name];
+          layer.Color = randomColor();
         }
         return layer;
       });

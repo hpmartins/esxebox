@@ -4,7 +4,7 @@ import jwtDecode from 'jwt-decode';
 
 const initialState = {
     token: null,
-    userName: null,
+    username: null,
     isAuthenticated: false,
     isAuthenticating: false,
     statusText: null
@@ -22,8 +22,8 @@ export default createReducer(initialState, {
             'isAuthenticating': false,
             'isAuthenticated': true,
             'token': payload.token,
-            'userName': jwtDecode(payload.token).identity,
-            'statusText': 'You have been successfully logged in.'
+            'username': jwtDecode(payload.token).identity,
+            'statusText': payload.message
         });
 
     },
@@ -32,16 +32,16 @@ export default createReducer(initialState, {
             'isAuthenticating': false,
             'isAuthenticated': false,
             'token': null,
-            'userName': null,
-            'statusText': `Authentication Error: ${payload.message}`
+            'username': null,
+            'statusText': payload.message,
         });
     },
     [authTypes.AUTH_LOGOUT]: (state, payload) => {
         return Object.assign({}, state, {
             'isAuthenticated': false,
             'token': null,
-            'userName': null,
-            'statusText': 'You have been successfully logged out.'
+            'username': null,
+            'statusText': authTypes.AUTH_LOGOUT,
         });
     },
     [authTypes.AUTH_CLEAR_STATUS]: (state, payload) => {

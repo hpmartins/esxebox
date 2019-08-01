@@ -32,9 +32,8 @@ export function logoutRequest() {
     }
 }
 
-export function logoutAndRedirect() {
-    return (dispatch, state) => {
-        dispatch(logoutRequest());
-        dispatch(push('/home'));
+export function clear_status() {
+    return {
+        type: authTypes.AUTH_CLEAR_STATUS,
     }
 }

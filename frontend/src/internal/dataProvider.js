@@ -1,15 +1,23 @@
-// import { authService } from './authService';
+import jwtDecode from 'jwt-decode';
 const fetchJson = require('fetch-json');
 
 function httpProvider(baseurl) {
   return (resource, params) => {
       const url = `${baseurl}/${resource}`;
-      // const options = {headers: new Headers({ Accept: 'application/json' })};
-      // const currentUser = authService.currentUserValue;
-      // if (currentUser && currentUser.token) {
-      //   options.headers.set('Authorization', `Bearer ${currentUser.token}`);
-      // }
-      return fetchJson.post(url, params);
+      const myInit = {
+          body: JSON.stringify(params),
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+          },
+          mode: 'cors',
+      }
+      const token = localStorage.getItem('token');
+      if (token) {
+          myInit.headers.Authorization = `Bearer ${token}`;
+      }
+      return fetch(url, myInit).then(resp => resp.json()).catch(e => e.json());
   };
 };
 
