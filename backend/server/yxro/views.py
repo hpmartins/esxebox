@@ -31,21 +31,38 @@ class Par2JsonAPI(MethodView):
         post_data = request.get_json()
 
         sample = MultilayerSample()
-        if sample.from_par(post_data['parfile']):
-            response = {
-                        'parfile' : sample.to_json(),
-            }
-            return make_response(jsonify(response), 200)
-        else:
-            response = {
-                        'status' : 'fail',
-                        'message': 'Error converting par file to new format',
-            }
-            return make_response(jsonify(response), 401)
+        try:
+            status  = sample.from_par(post_data['payload'])
+            payload = sample.to_json()
+        except:
+            status  = 0
+            payload = ''
+
+        response = {
+                    'status' : status,
+                    'payload': payload,
+        }
+        return make_response(jsonify(response), 200)
+
+class Json2ParAPI(MethodView):
+    @jwt_required
+    def post(self):
+        current_user = get_jwt_identity()
+        post_data = request.get_json()
+
+        sample = MultilayerSample()
+        status  = sample.from_json(post_data['payload'])
+        payload = sample.to_parfile()
+        response = {
+                    'status' : status,
+                    'payload': payload,
+        }
+        return make_response(jsonify(response), 200)
 
 par2json_view = Par2JsonAPI.as_view('par2json_api')
-
+json2par_view = Json2ParAPI.as_view('json2par_api')
 yxro_blueprint.add_url_rule('/yxro/par2json', view_func=par2json_view, methods=['POST'])
+yxro_blueprint.add_url_rule('/yxro/json2par', view_func=json2par_view, methods=['POST'])
 
 @app.route('/yxro/bokeh')
 def bokeh():

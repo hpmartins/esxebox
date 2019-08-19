@@ -96,7 +96,7 @@ function SampleCanvas(props) {
 
 const mapStateToProps = state => {
   return {
-    layers: state.root.yxro.layers,
+    layers: state.root.yxro.sample.layers,
   }
 }
 export default connect(mapStateToProps)(SampleCanvas);

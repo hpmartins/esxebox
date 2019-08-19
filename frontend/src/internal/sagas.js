@@ -1,11 +1,12 @@
 import { all, fork } from 'redux-saga/effects';
 
-import { watchGetLayersSaga } from '../YXRO';
+import { watchConvertParToJsonSaga, watchConvertJsonToParSaga } from '../YXRO';
 import watchUserAuthentication from '../auth/authSaga';
 
 export default function* root() {
   yield all([
-    fork(watchGetLayersSaga),
+    fork(watchConvertParToJsonSaga),
+    fork(watchConvertJsonToParSaga),
     fork(watchUserAuthentication),
   ]);
 }
