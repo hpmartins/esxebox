@@ -9,7 +9,7 @@ import storage from 'redux-persist/lib/storage' // defaults to localStorage for 
 import rootReducer from './rootReducer';
 import sagas from './sagas'
 
-export const history = createBrowserHistory();
+export const history = createBrowserHistory({basename : '/esxebox'});
 const sagaMiddleware = createSagaMiddleware();
 
 const persistConfig = {

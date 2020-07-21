@@ -4,8 +4,8 @@ import { CONVERT_PAR_TO_JSON, setSample, setCalculation, convertParToJson } from
 
 function* workerConvertParToJsonSaga(args) {
   const payload = yield call(convertParToJson, args);
-  yield put(setSample(payload.sample));
-  yield put(setCalculation(payload.calculation));
+  yield put(setSample(payload));
+  yield put(setCalculation(payload));
 }
 
 export default function* watchConvertParToJsonSaga() {

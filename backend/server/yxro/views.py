@@ -32,12 +32,12 @@ class Par2JsonAPI(MethodView):
 
         sample = MultilayerSample()
         try:
-            status  = sample.from_par(post_data['payload'])
+            status  = sample.from_yxrodata(post_data['payload'])
             payload = sample.to_json()
         except:
             status  = 0
             payload = ''
-
+            
         response = {
                     'status' : status,
                     'payload': payload,
